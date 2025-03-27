@@ -15,9 +15,22 @@
 
   <script type="text/babel">
     function RunningStreakDashboard() {
+      // Default to light mode
       const [darkMode, setDarkMode] = React.useState(() => {
-        return localStorage.getItem("theme") === "dark";
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme) return savedTheme === "dark";
+        return false;
       });
+
+      // Sync dark mode class and localStorage
+      React.useEffect(() => {
+        if (darkMode) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+        localStorage.setItem("theme", darkMode ? "dark" : "light");
+      }, [darkMode]);
 
       const startDate = new Date('2024-09-24');
       const today = new Date();
@@ -31,17 +44,12 @@
         { label: "1 Month", days: 30 },
         { label: "Quarter Year", days: 91 },
         { label: "100 Days", days: 100 },
-        { label: "Half Year", days: 183 },
+        { label: "Half Year", days: 182 },
         { label: "200 Days", days: 200 },
-        { label: "3/4 Year", days: 274 },
+        { label: "3/4 Year", days: 273 },
         { label: "300 Days", days: 300 },
         { label: "1 Year", days: 365 },
       ];
-
-      React.useEffect(() => {
-        document.documentElement.classList.toggle("dark", darkMode);
-        localStorage.setItem("theme", darkMode ? "dark" : "light");
-      }, [darkMode]);
 
       return (
         <div className="container mx-auto px-4 py-8 max-w-md">
