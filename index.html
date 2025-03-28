@@ -3,56 +3,58 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Running Streak Dashboard</title>
+  <title>StrideStack - Running Streak</title>
+
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Poppins', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- React & Babel -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.development.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.development.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
 </head>
-<body class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-black font-sans text-gray-900 dark:text-gray-100 transition-colors duration-300">
+
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-black font-sans text-gray-900 dark:text-gray-100 transition-colors duration-300 min-h-screen">
   <div id="root"></div>
 
   <script type="text/babel">
     function RunningStreakDashboard() {
-      // Default to light mode
       const [darkMode, setDarkMode] = React.useState(() => {
         const savedTheme = localStorage.getItem("theme");
-        if (savedTheme) return savedTheme === "light";
-        return false;
+        return savedTheme === "dark";
       });
 
-      // Sync dark mode class and localStorage
       React.useEffect(() => {
-        if (darkMode) {
-          document.documentElement.classList.add("dark");
-        } else {
-          document.documentElement.classList.remove("dark");
-        }
+        document.documentElement.classList.toggle("dark", darkMode);
         localStorage.setItem("theme", darkMode ? "dark" : "light");
       }, [darkMode]);
 
-      // Calculate streak days with EDT and 8 PM daily cutoff
+      const toggleDarkMode = () => setDarkMode(!darkMode);
+
       const calculateStreakDays = () => {
-        const startDate = new Date('2024-09-24T00:00:00-04:00'); // Explicitly set to EDT
+        const startDate = new Date('2024-09-24T00:00:00-04:00');
         const now = new Date();
-        
-        // Convert to EDT
-        const edtOffset = -4 * 60; // EDT is UTC-4
+        const edtOffset = -4 * 60;
         const localOffset = now.getTimezoneOffset();
         const edtTime = new Date(now.getTime() + (localOffset + edtOffset) * 60000);
-        
-        // Check if current time is before 8 PM
-        if (edtTime.getHours() < 20) {
-          // If before 8 PM, use previous day for calculation
-          edtTime.setDate(edtTime.getDate() - 1);
-        }
-        
-        // Calculate days difference
+        if (edtTime.getHours() < 20) edtTime.setDate(edtTime.getDate() - 1);
         const millisecondsPerDay = 1000 * 60 * 60 * 24;
-        const daysDifference = Math.floor((edtTime - startDate) / millisecondsPerDay) + 1;
-        
-        return daysDifference;
+        return Math.floor((edtTime - startDate) / millisecondsPerDay) + 1;
       };
 
       const streakDays = calculateStreakDays();
@@ -74,62 +76,69 @@
 
       return (
         <div className="container mx-auto px-4 py-8 max-w-md">
-          <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-3xl overflow-hidden border border-gray-200 dark:border-gray-700 transform transition-all hover:scale-[1.02]">
+          <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-3xl overflow-hidden border border-gray-200 dark:border-gray-700 transition-all">
             
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-center">
-              <h1 className="text-4xl font-bold text-white mb-2">StrideStack</h1>
-              <p className="text-blue-100">Tracking Noah Cornish's Running Streak!</p>
-              <p className="text-blue-100">Started: September 24th, 2024</p>
+            <div className="relative bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 p-8 text-center text-white shadow-xl rounded-b-3xl">
+              <button
+                onClick={toggleDarkMode}
+                className="absolute top-4 right-4 bg-white/20 dark:bg-black/30 text-white p-2 rounded-full hover:scale-105 transition"
+                title="Toggle Theme"
+              >
+                {darkMode ? '🌞' : '🌙'}
+              </button>
+              <h1 className="text-5xl font-display font-extrabold drop-shadow mb-1">StrideStack</h1>
+              <p className="text-blue-100 tracking-wide">Tracking Noah Cornish's Running Streak</p>
+              <p className="text-sm text-blue-200 mt-1">Since: <strong>Sep 24, 2024</strong></p>
             </div>
 
             <div className="p-6 space-y-6">
 
-              {/* Metrics */}
-              <div className="grid grid-cols-3 gap-4">
-                <div className="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg text-center">
-                  <div className="text-3xl font-bold text-blue-700 dark:text-blue-300">{streakDays}</div>
-                  <div className="text-sm text-blue-800 dark:text-blue-200">Days</div>
+              {/* Colored Metric Cards */}
+              <div className="grid grid-cols-3 gap-4 text-white">
+                <div className="bg-red-500 p-4 rounded-xl shadow text-center">
+                  <div className="text-2xl font-bold">{streakDays}</div>
+                  <div className="text-sm opacity-90">Days</div>
                 </div>
-                <div className="bg-green-100 dark:bg-green-900 p-4 rounded-lg text-center">
-                  <div className="text-3xl font-bold text-green-700 dark:text-green-300">{Math.floor(streakDays / 7)}</div>
-                  <div className="text-sm text-green-800 dark:text-green-200">Weeks</div>
+                <div className="bg-green-500 p-4 rounded-xl shadow text-center">
+                  <div className="text-2xl font-bold">{Math.floor(streakDays / 7)}</div>
+                  <div className="text-sm opacity-90">Weeks</div>
                 </div>
-                <div className="bg-purple-100 dark:bg-purple-900 p-4 rounded-lg text-center">
-                  <div className="text-3xl font-bold text-purple-700 dark:text-purple-300">{Math.floor(streakDays / 30)}</div>
-                  <div className="text-sm text-purple-800 dark:text-purple-200">Months</div>
+                <div className="bg-blue-500 p-4 rounded-xl shadow text-center">
+                  <div className="text-2xl font-bold">{Math.floor(streakDays / 30)}</div>
+                  <div className="text-sm opacity-90">Months</div>
                 </div>
               </div>
 
               {/* Distance */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-indigo-50 dark:bg-indigo-900 p-4 rounded-lg text-center">
+                <div className="bg-indigo-50 dark:bg-indigo-900 p-4 rounded-xl text-center shadow">
                   <div className="text-3xl font-bold text-indigo-700 dark:text-indigo-300 break-words">1,712.8</div>
                   <div className="text-sm text-indigo-800 dark:text-indigo-200">Total Distance (km)</div>
                 </div>
-                <div className="bg-teal-50 dark:bg-teal-900 p-4 rounded-lg text-center">
+                <div className="bg-teal-50 dark:bg-teal-900 p-4 rounded-xl text-center shadow">
                   <div className="text-3xl font-bold text-teal-700 dark:text-teal-300 break-words">9.26</div>
                   <div className="text-sm text-teal-800 dark:text-teal-200">Avg Daily Distance (km)</div>
                 </div>
               </div>
 
-              {/* Goal Progress */}
-              <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-4 shadow-md">
+              {/* Progress */}
+              <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-4 shadow-md">
                 <div className="flex justify-between mb-2">
-                  <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">365-Day Goal Progress</span>
+                  <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">365-Day Goal</span>
                   <span className="text-sm font-bold text-blue-600">{percentComplete}%</span>
                 </div>
-                <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-3 mb-2">
-                  <div className="bg-blue-600 h-3 rounded-full" style={{ width: `${goalProgress}%` }}></div>
+                <div className="relative w-full h-4 rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden">
+                  <div className="absolute top-0 left-0 h-full bg-blue-600 transition-all duration-1000 ease-out" style={{ width: `${goalProgress}%` }}></div>
                 </div>
-                <p className="text-xs text-gray-500 dark:text-gray-300">
-                  {daysRemaining} days remaining to complete 365-day challenge
+                <p className="text-xs text-blue-500 mt-2 text-center italic">
+                  {daysRemaining} days remaining!
                 </p>
               </div>
 
               {/* Milestones */}
-              <div className="bg-yellow-50 dark:bg-yellow-900 p-4 rounded-lg">
-                <h2 className="text-lg font-bold text-yellow-800 dark:text-yellow-200 mb-2">🏅 Milestones Reached</h2>
+              <div className="bg-yellow-50 dark:bg-yellow-900 p-4 rounded-xl shadow">
+                <h2 className="text-lg font-bold text-yellow-800 dark:text-yellow-200 mb-2">🏅 Milestones</h2>
                 <div className="flex flex-wrap gap-2">
                   {milestones.filter(m => streakDays >= m.days).map(m => (
                     <span key={m.days} className="bg-yellow-300 dark:bg-yellow-600 text-yellow-900 dark:text-yellow-100 px-3 py-1 rounded-full text-xs font-semibold shadow">
@@ -143,9 +152,9 @@
               </div>
 
               {/* Inspiration */}
-              <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-5">
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4 text-center">Your Journey</h2>
-                <p className="text-blue-800 dark:text-blue-200 text-center font-semibold mb-4">
+              <div className="bg-blue-50 dark:bg-blue-900 rounded-xl p-5 shadow">
+                <h2 className="text-xl font-bold text-center mb-2">💡</h2>
+                <p className="text-center text-blue-800 dark:text-blue-200 font-medium mb-4">
                   {streakDays < 30 ? "You're building an incredible habit!" :
                   streakDays < 182 ? "Consistency is your greatest strength!" :
                   streakDays < 365 ? "Dedication plants the seed, but consistency nurtures its bloom!" :
@@ -160,23 +169,11 @@
                 </div>
               </div>
 
-              {/* Strava */}
-              <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 pt-6">
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4 text-center">Recent Activities</h2>
-                <div className="flex flex-col items-center space-y-4">
-                  <iframe height="454" width="300" frameBorder="0" allowTransparency="true" scrolling="no"
-                    src="https://www.strava.com/athletes/15357095/latest-rides/658316be02d780e888bec14702a3ec89c7bcbea0"
-                    className="rounded-lg shadow-md"></iframe>
-                  <iframe height="160" width="300" frameBorder="0" allowTransparency="true" scrolling="no"
-                    src="https://www.strava.com/athletes/15357095/activity-summary/658316be02d780e888bec14702a3ec89c7bcbea0"
-                    className="rounded-lg shadow-md"></iframe>
-                </div>
-              </div>
             </div>
 
             {/* Footer */}
-            <div className="bg-gray-100 dark:bg-gray-900 p-4 text-center text-sm text-gray-600 dark:text-gray-400">
-              Powered by: Pulse Dynamics
+            <div className="bg-gray-100 dark:bg-gray-900 p-4 text-center text-sm text-gray-600 dark:text-gray-400 rounded-b-3xl">
+              🚀 Powered by Pulse Dynamics
             </div>
           </div>
         </div>
