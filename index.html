@@ -32,9 +32,30 @@
         localStorage.setItem("theme", darkMode ? "dark" : "light");
       }, [darkMode]);
 
-      const startDate = new Date('2024-09-24');
-      const today = new Date();
-      const streakDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) + 1;
+      // Calculate streak days with EDT and 8 PM daily cutoff
+      const calculateStreakDays = () => {
+        const startDate = new Date('2024-09-24T00:00:00-04:00'); // Explicitly set to EDT
+        const now = new Date();
+        
+        // Convert to EDT
+        const edtOffset = -4 * 60; // EDT is UTC-4
+        const localOffset = now.getTimezoneOffset();
+        const edtTime = new Date(now.getTime() + (localOffset + edtOffset) * 60000);
+        
+        // Check if current time is before 8 PM
+        if (edtTime.getHours() < 20) {
+          // If before 8 PM, use previous day for calculation
+          edtTime.setDate(edtTime.getDate() - 1);
+        }
+        
+        // Calculate days difference
+        const millisecondsPerDay = 1000 * 60 * 60 * 24;
+        const daysDifference = Math.floor((edtTime - startDate) / millisecondsPerDay) + 1;
+        
+        return daysDifference;
+      };
+
+      const streakDays = calculateStreakDays();
       const goalDays = 365;
       const goalProgress = Math.min((streakDays / goalDays) * 100, 100);
       const daysRemaining = Math.max(goalDays - streakDays, 0);
@@ -53,10 +74,6 @@
 
       return (
         <div className="container mx-auto px-4 py-8 max-w-md">
-          <div className="flex justify-end mb-4">
-            
-          </div>
-
           <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-3xl overflow-hidden border border-gray-200 dark:border-gray-700 transform transition-all hover:scale-[1.02]">
             
             {/* Header */}
