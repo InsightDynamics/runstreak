@@ -18,7 +18,7 @@
       // Default to light mode
       const [darkMode, setDarkMode] = React.useState(() => {
         const savedTheme = localStorage.getItem("theme");
-        if (savedTheme) return savedTheme === "dark";
+        if (savedTheme) return savedTheme === "light";
         return false;
       });
 
@@ -54,12 +54,7 @@
       return (
         <div className="container mx-auto px-4 py-8 max-w-md">
           <div className="flex justify-end mb-4">
-            <button
-              onClick={() => setDarkMode(!darkMode)}
-              className="bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-white px-3 py-1 rounded-full text-sm font-semibold shadow"
-            >
-              {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
-            </button>
+            
           </div>
 
           <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-3xl overflow-hidden border border-gray-200 dark:border-gray-700 transform transition-all hover:scale-[1.02]">
@@ -92,11 +87,11 @@
               {/* Distance */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-indigo-50 dark:bg-indigo-900 p-4 rounded-lg text-center">
-                  <div className="text-3xl font-bold text-indigo-700 dark:text-indigo-300 break-words">1,707.7</div>
+                  <div className="text-3xl font-bold text-indigo-700 dark:text-indigo-300 break-words">1,712.8</div>
                   <div className="text-sm text-indigo-800 dark:text-indigo-200">Total Distance (km)</div>
                 </div>
                 <div className="bg-teal-50 dark:bg-teal-900 p-4 rounded-lg text-center">
-                  <div className="text-3xl font-bold text-teal-700 dark:text-teal-300 break-words">9.28</div>
+                  <div className="text-3xl font-bold text-teal-700 dark:text-teal-300 break-words">9.26</div>
                   <div className="text-sm text-teal-800 dark:text-teal-200">Avg Daily Distance (km)</div>
                 </div>
               </div>
