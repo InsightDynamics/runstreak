@@ -74,6 +74,12 @@
         { label: "1 Year", days: 365 },
       ];
 
+      // Total duration = 6d 9h 39m 33s
+      const totalDurationSeconds = (6 * 86400) + (9 * 3600) + (39 * 60) + 33;
+      const averageDurationSeconds = totalDurationSeconds / streakDays;
+      const avgMinutes = Math.floor(averageDurationSeconds / 60);
+      const avgSeconds = Math.round(averageDurationSeconds % 60).toString().padStart(2, "0");
+
       return (
         <div className="container mx-auto px-4 py-8 max-w-md">
           <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-3xl overflow-hidden border border-gray-200 dark:border-gray-700 transition-all">
@@ -115,10 +121,19 @@
                 </div>
               </div>
 
-              {/* Minimum Distance Note */}
-              <p className="text-xs text-gray-600 dark:text-gray-400 text-center">
-                Minimum daily run: <strong>2 miles</strong> (3.22 km)
-              </p>
+              {/* Time Stats */}
+              <div className="grid grid-cols-2 gap-4 text-center">
+                <div className="bg-pink-50 dark:bg-pink-900 p-4 rounded-xl shadow">
+                  <div className="text-2xl font-bold text-pink-700 dark:text-pink-200">6d 9h 39m</div>
+                  <div className="text-sm text-pink-800 dark:text-pink-100">Total Time Running</div>
+                </div>
+                <div className="bg-purple-50 dark:bg-purple-900 p-4 rounded-xl shadow">
+                  <div className="text-2xl font-bold text-purple-700 dark:text-purple-200">
+                    {avgMinutes}m {avgSeconds}s
+                  </div>
+                  <div className="text-sm text-purple-800 dark:text-purple-100">Avg Activity Time</div>
+                </div>
+              </div>
 
               {/* Progress */}
               <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-4 shadow-md">
@@ -133,6 +148,10 @@
                   {daysRemaining} days remaining!
                 </p>
               </div>
+              {/* Minimum Distance Note */}
+              <p className="text-xs text-gray-600 dark:text-gray-400 text-center">
+                Minimum daily run: <strong>2 miles</strong> (3.22 km)
+              </p>
 
               {/* Milestones */}
               <div className="bg-yellow-50 dark:bg-yellow-900 p-4 rounded-xl shadow">
@@ -171,7 +190,7 @@
 
             {/* Footer */}
             <div className="bg-gray-100 dark:bg-gray-900 p-4 text-center text-sm text-gray-600 dark:text-gray-400 rounded-b-3xl">
-              🚀 Powered by Pulse Dynamics
+              🚀 Powered by Pulse Dynamics&copy;
             </div>
           </div>
         </div>
