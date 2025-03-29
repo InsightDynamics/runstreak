@@ -74,8 +74,8 @@
         { label: "1 Year", days: 365 },
       ];
 
-      // Total duration = 6d 9h 39m 33s
-      const totalDurationSeconds = (6 * 86400) + (9 * 3600) + (39 * 60) + 33;
+      // Total duration = xd xh xm xs
+      const totalDurationSeconds = (6 * 86400) + (9 * 3600) + (54 * 60) + 9;
       const averageDurationSeconds = totalDurationSeconds / streakDays;
       const avgMinutes = Math.floor(averageDurationSeconds / 60);
       const avgSeconds = Math.round(averageDurationSeconds % 60).toString().padStart(2, "0");
