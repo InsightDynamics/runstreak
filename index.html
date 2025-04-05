@@ -13,15 +13,35 @@
         extend: {
           fontFamily: {
             sans: ['Inter', 'sans-serif'],
-            display: ['Poppins', 'sans-serif'],
+            display: ['Montserrat', 'sans-serif'],
           },
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+            },
+            accent: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+              800: '#5b21b6',
+              900: '#4c1d95',
+            }
+          }
         }
       }
     }
   </script>
 
   <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- React & Babel -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.development.js"></script>
@@ -34,10 +54,101 @@
 
   <script type="text/babel">
     function RunningStreakDashboard() {
-      const [darkMode, setDarkMode] = React.useState(() => {
-        const savedTheme = localStorage.getItem("theme");
-        return savedTheme === "dark";
-      });
+      // -------------------------
+      // CONFIG SECTION — CHANGE THESE
+      // -------------------------
+      const streakDays = 194;
+      const totalKilometers = 1762.8;
+      const duration = {
+        days: 6,
+        hours: 13,
+        minutes: 36,
+        seconds: 47
+      };
+
+      // -------------------------
+      // CALCULATED STATS
+      // -------------------------
+      const goalDays = 365;
+      const goalProgress = Math.min((streakDays / goalDays) * 100, 100);
+      const daysRemaining = Math.max(goalDays - streakDays, 0);
+      const percentComplete = goalProgress.toFixed(1);
+      const averageKm = (totalKilometers / streakDays).toFixed(2);
+
+      const totalDurationSeconds =
+        duration.days * 86400 +
+        duration.hours * 3600 +
+        duration.minutes * 60 +
+        duration.seconds;
+
+      const avgDurationSeconds = totalDurationSeconds / streakDays;
+      const avgMinutes = Math.floor(avgDurationSeconds / 60);
+      const avgSeconds = Math.round(avgDurationSeconds % 60).toString().padStart(2, "0");
+
+      const totalFormatted = `${duration.days}d ${duration.hours}h ${duration.minutes}m`;
+
+      const milestones = [
+  // Weekly milestones (first 3 months)
+  { label: "1 Week", days: 7 },
+  { label: "2 Weeks", days: 14 },
+  { label: "3 Weeks", days: 21 },
+  { label: "4 Weeks / 1 Month", days: 30 },
+  { label: "5 Weeks", days: 35 },
+  { label: "6 Weeks", days: 42 },
+  { label: "7 Weeks", days: 49 },
+  { label: "8 Weeks / 2 Months", days: 60 },
+  { label: "9 Weeks", days: 63 },
+  { label: "10 Weeks", days: 70 },
+  { label: "11 Weeks", days: 77 },
+  { label: "12 Weeks / 3 Months", days: 90 },
+
+  // Quarter milestones and key counts
+  { label: "Quarter Year", days: 91 },
+  { label: "100 Days", days: 100 },
+  { label: "4 Months", days: 120 },
+  { label: "150 Days", days: 150 },
+  { label: "5 Months", days: 152 },
+  { label: "Half Year", days: 182 },
+  { label: "6 Months", days: 183 },
+  { label: "200 Days", days: 200 },
+  { label: "7 Months", days: 213 },
+  { label: "2/3 Year", days: 243 },
+  { label: "8 Months", days: 243 },
+  { label: "3/4 Year", days: 273 },
+  { label: "9 Months", days: 274 },
+  { label: "300 Days", days: 300 },
+  { label: "10 Months", days: 304 },
+  { label: "11 Months", days: 334 },
+
+  // 1 Year
+  { label: "1 Year", days: 365 },
+
+  // Year 2 markers
+  { label: "13 Months", days: 395 },
+  { label: "400 Days", days: 400 },
+  { label: "14 Months", days: 425 },
+  { label: "15 Months", days: 456 },
+  { label: "500 Days", days: 500 },
+  { label: "16 Months", days: 487 },
+  { label: "17 Months", days: 517 },
+  { label: "1.5 Years", days: 547 },
+  { label: "18 Months", days: 548 },
+  { label: "600 Days", days: 600 },
+  { label: "19 Months", days: 578 },
+  { label: "20 Months", days: 609 },
+  { label: "21 Months", days: 639 },
+  { label: "650 Days", days: 650 },
+  { label: "22 Months", days: 669 },
+  { label: "23 Months", days: 700 },
+  { label: "2 Years", days: 730 },
+];
+
+
+      const nextMilestone = milestones.find(m => m.days > streakDays) || { label: "All Complete!", days: goalDays };
+      const daysToNextMilestone = nextMilestone.days - streakDays;
+      const nextMilestoneProgress = Math.min((streakDays / nextMilestone.days) * 100, 100);
+
+      const [darkMode, setDarkMode] = React.useState(() => localStorage.getItem("theme") === "dark");
 
       React.useEffect(() => {
         document.documentElement.classList.toggle("dark", darkMode);
@@ -46,119 +157,124 @@
 
       const toggleDarkMode = () => setDarkMode(!darkMode);
 
-      const calculateStreakDays = () => {
-        const startDate = new Date('2024-09-24T00:00:00-04:00');
-        const now = new Date();
-        const edtOffset = -4 * 60;
-        const localOffset = now.getTimezoneOffset();
-        const edtTime = new Date(now.getTime() + (localOffset + edtOffset) * 60000);
-        if (edtTime.getHours() < 20) edtTime.setDate(edtTime.getDate() - 1);
-        const millisecondsPerDay = 1000 * 60 * 60 * 24;
-        return Math.floor((edtTime - startDate) / millisecondsPerDay) + 1;
-      };
-
-      const streakDays = calculateStreakDays();
-      const goalDays = 365;
-      const goalProgress = Math.min((streakDays / goalDays) * 100, 100);
-      const daysRemaining = Math.max(goalDays - streakDays, 0);
-      const percentComplete = goalProgress.toFixed(1);
-
-      const milestones = [
-        { label: "1 Month", days: 30 },
-        { label: "Quarter Year", days: 91 },
-        { label: "100 Days", days: 100 },
-        { label: "Half Year", days: 182 },
-        { label: "200 Days", days: 200 },
-        { label: "3/4 Year", days: 273 },
-        { label: "300 Days", days: 300 },
-        { label: "1 Year", days: 365 },
-      ];
-
-      // Total duration = xd xh xm xs
-      const totalDurationSeconds = (6 * 86400) + (13 * 3600) + (17 * 60) + 33;
-      const averageDurationSeconds = totalDurationSeconds / streakDays;
-      const avgMinutes = Math.floor(averageDurationSeconds / 60);
-      const avgSeconds = Math.round(averageDurationSeconds % 60).toString().padStart(2, "0");
-
       return (
-        <div className="container mx-auto px-4 py-8 max-w-md">
+        <div className="container mx-auto px-4 py-8 max-w-lg">
+          <div className="flex justify-end mb-4">
+            <button
+              onClick={toggleDarkMode}
+              className="p-2 rounded-full bg-white dark:bg-gray-800 text-gray-800 dark:text-white shadow-md hover:shadow-lg transition duration-300"
+            >
+              {darkMode ? "☀️" : "🌙"}
+            </button>
+          </div>
+
           <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-3xl overflow-hidden border border-gray-200 dark:border-gray-700 transition-all">
-            
-            {/* Header */}
-            <div className="relative bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 p-8 text-center text-white shadow-xl rounded-b-3xl">
-              <h1 className="text-5xl font-display font-extrabold drop-shadow mb-1">StrideStack</h1>
-              <p className="text-blue-100 tracking-wide">Tracking Noah Cornish's Running Streak</p>
-              <p className="text-sm text-blue-200 mt-1">Since: <strong>Sep 24, 2024</strong></p>
+            <div className="relative bg-gradient-to-br from-accent-600 via-accent-700 to-primary-800 p-8 text-center text-white shadow-xl">
+              <div className="absolute inset-0 bg-gradient-to-br from-white to-transparent opacity-10"></div>
+              <div className="relative z-10">
+                <div className="w-20 h-20 mx-auto bg-white rounded-full shadow-xl flex items-center justify-center mb-4">
+                  <span className="text-3xl">🏃</span>
+                </div>
+                <h1 className="text-5xl font-display font-extrabold mb-1 tracking-tight">StrideStack</h1>
+                <p className="text-accent-100 font-medium tracking-wide">Noah Cornish's Running Journey</p>
+                <div className="flex items-center justify-center mt-2 text-sm">
+                  <div className="px-3 py-1 bg-black bg-opacity-20 rounded-full">
+                    Started: <strong>Sep 24, 2024</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Main Streak Card */}
+            <div className="pt-6 px-6">
+              <div className="bg-gradient-to-br from-primary-600 to-primary-800 rounded-2xl p-6 shadow-lg text-white relative overflow-hidden transform -translate-y-8">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-5 rounded-full -translate-x-8 -translate-y-8"></div>
+                <div className="text-center">
+                  <p className="text-primary-100 uppercase tracking-wider text-sm font-semibold">Current Streak</p>
+                  <h2 className="text-7xl font-display font-bold my-2">{streakDays}</h2>
+                  <p className="text-primary-100 uppercase tracking-wider text-xs">Consecutive Days</p>
+                </div>
+              </div>
             </div>
 
             <div className="p-6 space-y-6">
-
-              {/* Colored Metric Cards */}
-              <div className="grid grid-cols-3 gap-4 text-white">
-                <div className="bg-red-500 p-4 rounded-xl shadow text-center">
-                  <div className="text-2xl font-bold">{streakDays}</div>
-                  <div className="text-sm opacity-90">Days</div>
-                </div>
-                <div className="bg-green-500 p-4 rounded-xl shadow text-center">
-                  <div className="text-2xl font-bold">{Math.floor(streakDays / 7)}</div>
-                  <div className="text-sm opacity-90">Weeks</div>
-                </div>
-                <div className="bg-blue-500 p-4 rounded-xl shadow text-center">
-                  <div className="text-2xl font-bold">{Math.floor(streakDays / 30)}</div>
-                  <div className="text-sm opacity-90">Months</div>
-                </div>
-              </div>
-
-              {/* Distance */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-indigo-50 dark:bg-indigo-900 p-4 rounded-xl text-center shadow">
-                  <div className="text-3xl font-bold text-indigo-700 dark:text-indigo-300 break-words">1,759.5</div>
-                  <div className="text-sm text-indigo-800 dark:text-indigo-200">Total Distance (km)</div>
+                <div className="bg-gray-100 dark:bg-gray-700 rounded-xl shadow p-4 text-center">
+                  <div className="text-2xl font-bold text-primary-700 dark:text-primary-300">{Math.floor(streakDays / 7)}</div>
+                  <div className="text-xs text-gray-600 dark:text-gray-400 uppercase font-medium">Weeks</div>
                 </div>
-                <div className="bg-teal-50 dark:bg-teal-900 p-4 rounded-xl text-center shadow">
-                  <div className="text-3xl font-bold text-teal-700 dark:text-teal-300 break-words">9.12</div>
-                  <div className="text-sm text-teal-800 dark:text-teal-200">Avg Daily Distance (km)</div>
+                <div className="bg-gray-100 dark:bg-gray-700 rounded-xl shadow p-4 text-center">
+                  <div className="text-2xl font-bold text-primary-700 dark:text-primary-300">{Math.floor(streakDays / 30)}</div>
+                  <div className="text-xs text-gray-600 dark:text-gray-400 uppercase font-medium">Months</div>
                 </div>
               </div>
 
-              {/* Time Stats */}
-              <div className="grid grid-cols-2 gap-4 text-center">
-                <div className="bg-pink-50 dark:bg-pink-900 p-4 rounded-xl shadow">
-                  <div className="text-2xl font-bold text-pink-700 dark:text-pink-200">6d 13h 17m</div>
-                  <div className="text-sm text-pink-800 dark:text-pink-100">Total Time Running</div>
+              <div className="bg-white dark:bg-gray-700 rounded-2xl shadow-lg p-5 border border-gray-100 dark:border-gray-600">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="font-display font-bold text-lg text-gray-900 dark:text-white">Next Milestone</h2>
+                  <span className="text-sm font-semibold text-primary-600 dark:text-primary-400">{nextMilestone.label}</span>
                 </div>
-                <div className="bg-purple-50 dark:bg-purple-900 p-4 rounded-xl shadow">
-                  <div className="text-2xl font-bold text-purple-700 dark:text-purple-200">
-                    {avgMinutes}m {avgSeconds}s
+                <div className="relative w-full h-3 rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden mb-2">
+                  <div className="absolute top-0 left-0 h-full bg-accent-600 transition-all duration-1000 ease-out" style={{ width: `${nextMilestoneProgress}%` }}></div>
+                </div>
+                <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">
+                  <span>{daysToNextMilestone} days to go</span>
+                  <span>{nextMilestone.days} days total</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-white dark:bg-gray-700 rounded-2xl shadow-lg p-5 border border-gray-100 dark:border-gray-600">
+                  <div className="flex items-center justify-center space-x-2 mb-3">
+                    <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+                      <span className="text-green-600 dark:text-green-300">📏</span>
+                    </div>
+                    <h3 className="font-semibold text-gray-800 dark:text-gray-200">Distance</h3>
                   </div>
-                  <div className="text-sm text-purple-800 dark:text-purple-100">Avg Activity Time</div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-green-600 dark:text-green-400">{totalKilometers}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400 uppercase mt-1">Total Kilometers</div>
+                    <div className="mt-3 text-xl font-semibold text-green-600 dark:text-green-400">{averageKm}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400 uppercase">Daily Average (km)</div>
+                  </div>
+                </div>
+
+                <div className="bg-white dark:bg-gray-700 rounded-2xl shadow-lg p-5 border border-gray-100 dark:border-gray-600">
+                  <div className="flex items-center justify-center space-x-2 mb-3">
+                    <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                      <span className="text-blue-600 dark:text-blue-300">⏱️</span>
+                    </div>
+                    <h3 className="font-semibold text-gray-800 dark:text-gray-200">Running Time</h3>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{totalFormatted}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400 uppercase mt-1">Total Duration</div>
+                    <div className="mt-3 text-xl font-semibold text-blue-600 dark:text-blue-400">{avgMinutes}m {avgSeconds}s</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400 uppercase">Daily Average</div>
+                  </div>
                 </div>
               </div>
 
-              {/* Progress */}
-              <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-4 shadow-md">
-                <div className="flex justify-between mb-2">
-                  <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">365-Day Goal</span>
-                  <span className="text-sm font-bold text-blue-600">{percentComplete}%</span>
+              <div className="bg-white dark:bg-gray-700 rounded-2xl shadow-lg p-5 border border-gray-100 dark:border-gray-600">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="font-display font-bold text-lg text-gray-900 dark:text-white">365-Day Challenge</h2>
+                  <span className="text-sm font-semibold text-primary-600 dark:text-primary-400">{percentComplete}%</span>
                 </div>
-                <div className="relative w-full h-4 rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden">
-                  <div className="absolute top-0 left-0 h-full bg-blue-600 transition-all duration-1000 ease-out" style={{ width: `${goalProgress}%` }}></div>
+                <div className="relative w-full h-3 rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden mb-2">
+                  <div className="absolute top-0 left-0 h-full bg-primary-600 transition-all duration-1000 ease-out" style={{ width: `${goalProgress}%` }}></div>
                 </div>
-                <p className="text-xs text-blue-500 mt-2 text-center italic">
-                  {daysRemaining} days remaining!
-                </p>
+                <div className="text-center mt-3">
+                  <span className="inline-block px-3 py-1 bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 rounded-full text-xs font-medium">
+                    {daysRemaining} days remaining!
+                  </span>
+                </div>
               </div>
-              {/* Minimum Distance Note */}
-              <p className="text-xs text-gray-600 dark:text-gray-400 text-center">
-                Minimum daily run: <strong>2 miles</strong> (3.22 km)
-              </p>
 
-              {/* Milestones */}
-              <div className="bg-yellow-50 dark:bg-yellow-900 p-4 rounded-xl shadow">
-                <h2 className="text-lg font-bold text-yellow-800 dark:text-yellow-200 mb-2">🏅 Milestones</h2>
+              <div className="bg-white dark:bg-gray-700 rounded-2xl shadow-lg p-5 border border-gray-100 dark:border-gray-600">
+                <h2 className="font-display font-bold text-lg text-gray-900 dark:text-white mb-3">🏆 Achievements</h2>
                 <div className="flex flex-wrap gap-2">
                   {milestones.filter(m => streakDays >= m.days).map(m => (
-                    <span key={m.days} className="bg-yellow-300 dark:bg-yellow-600 text-yellow-900 dark:text-yellow-100 px-3 py-1 rounded-full text-xs font-semibold shadow">
+                    <span key={m.days} className="bg-accent-100 dark:bg-accent-900 text-accent-800 dark:text-accent-100 px-3 py-1 rounded-full text-xs font-semibold shadow-sm">
                       {m.label}
                     </span>
                   ))}
@@ -168,29 +284,42 @@
                 </div>
               </div>
 
-              {/* Inspiration */}
-              <div className="bg-blue-50 dark:bg-blue-900 rounded-xl p-5 shadow">
-                <h2 className="text-xl font-bold text-center mb-2">💡</h2>
-                <p className="text-center text-blue-800 dark:text-blue-200 font-medium mb-4">
-                  {streakDays < 30 ? "You're building an incredible habit!" :
-                  streakDays < 182 ? "Consistency is your greatest strength!" :
-                  streakDays < 365 ? "Dedication plants the seed, but consistency nurtures its bloom!" :
-                  "365-Day Challenge Completed! Absolute Champion!"}
+              <div className="bg-gray-50 dark:bg-gray-750 rounded-2xl p-4 text-center">
+                <p className="text-xs text-gray-600 dark:text-gray-400">
+                  Minimum daily run: <strong>2 miles</strong> (3.22 km)
                 </p>
-                <div className="flex justify-center">
-                  <a href="abou.html">
-                    <button className="bg-blue-600 text-white px-4 py-2 rounded-full shadow hover:bg-blue-700 transition duration-300">
-                      Learn More
-                    </button>
-                  </a>
-                </div>
               </div>
 
+              <div className="bg-gradient-to-br from-accent-500 to-accent-700 rounded-2xl p-6 shadow-lg text-white relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-5 rounded-full -translate-x-8 -translate-y-8"></div>
+                <div className="text-center relative z-10">
+                  <div className="w-12 h-12 mx-auto bg-white bg-opacity-20 rounded-full flex items-center justify-center mb-3">
+                    <span className="text-xl">💡</span>
+                  </div>
+                  <p className="font-medium mb-4">
+                    {streakDays < 30 ? "You're building an incredible habit!" :
+                      streakDays < 182 ? "Consistency is your greatest strength!" :
+                        streakDays < 365 ? "Dedication plants the seed, but consistency nurtures its bloom!" :
+                          "365-Day Challenge Completed! Absolute Champion!"}
+                  </p>
+                  <div className="flex justify-center">
+                    <a href="about.html">
+                      <button className="bg-white text-accent-700 px-5 py-2 rounded-full shadow-md hover:shadow-lg transition duration-300 font-medium text-sm">
+                        Learn More
+                      </button>
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* Footer */}
-            <div className="bg-gray-100 dark:bg-gray-900 p-4 text-center text-sm text-gray-600 dark:text-gray-400 rounded-b-3xl">
-              🚀 Powered by Pulse Dynamics&copy;
+            <div className="bg-gray-50 dark:bg-gray-900 p-5 text-center text-sm text-gray-600 dark:text-gray-400">
+              <div className="flex items-center justify-center space-x-1">
+                <span>🚀</span>
+                <span>Powered by</span>
+                <span className="font-semibold">Pulse Dynamics</span>
+                <span>&copy;</span>
+              </div>
             </div>
           </div>
         </div>
