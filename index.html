@@ -75,7 +75,7 @@
       ];
 
       // Total duration = xd xh xm xs
-      const totalDurationSeconds = (6 * 86400) + (10 * 3600) + (58 * 60) + 57;
+      const totalDurationSeconds = (6 * 86400) + (13 * 3600) + (17 * 60) + 33;
       const averageDurationSeconds = totalDurationSeconds / streakDays;
       const avgMinutes = Math.floor(averageDurationSeconds / 60);
       const avgSeconds = Math.round(averageDurationSeconds % 60).toString().padStart(2, "0");
@@ -112,11 +112,11 @@
               {/* Distance */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-indigo-50 dark:bg-indigo-900 p-4 rounded-xl text-center shadow">
-                  <div className="text-3xl font-bold text-indigo-700 dark:text-indigo-300 break-words">1,731.4</div>
+                  <div className="text-3xl font-bold text-indigo-700 dark:text-indigo-300 break-words">1,759.5</div>
                   <div className="text-sm text-indigo-800 dark:text-indigo-200">Total Distance (km)</div>
                 </div>
                 <div className="bg-teal-50 dark:bg-teal-900 p-4 rounded-xl text-center shadow">
-                  <div className="text-3xl font-bold text-teal-700 dark:text-teal-300 break-words">9.21</div>
+                  <div className="text-3xl font-bold text-teal-700 dark:text-teal-300 break-words">9.12</div>
                   <div className="text-sm text-teal-800 dark:text-teal-200">Avg Daily Distance (km)</div>
                 </div>
               </div>
@@ -124,7 +124,7 @@
               {/* Time Stats */}
               <div className="grid grid-cols-2 gap-4 text-center">
                 <div className="bg-pink-50 dark:bg-pink-900 p-4 rounded-xl shadow">
-                  <div className="text-2xl font-bold text-pink-700 dark:text-pink-200">6d 10h 59m</div>
+                  <div className="text-2xl font-bold text-pink-700 dark:text-pink-200">6d 13h 17m</div>
                   <div className="text-sm text-pink-800 dark:text-pink-100">Total Time Running</div>
                 </div>
                 <div className="bg-purple-50 dark:bg-purple-900 p-4 rounded-xl shadow">
