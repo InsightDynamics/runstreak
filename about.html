@@ -13,31 +13,55 @@
         extend: {
           fontFamily: {
             sans: ['Inter', 'sans-serif'],
-            display: ['Poppins', 'sans-serif'],
+            display: ['Montserrat', 'sans-serif'],
           },
+          colors: {
+            primary: {
+              600: '#0284c7',
+              800: '#075985',
+            },
+            accent: {
+              600: '#7c3aed',
+              700: '#6d28d9',
+            }
+          }
         }
       }
     }
   </script>
 
   <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- React & Babel -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.development.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.development.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+
+  <style>
+    .fade-in {
+      animation: fadeInUp .75s ease-out both;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
 </head>
 
-<body class="bg-gradient-to-br from-white to-gray-100 dark:from-gray-900 dark:to-black font-sans text-gray-900 dark:text-gray-100 transition-colors duration-300 min-h-screen">
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-black font-sans text-gray-900 dark:text-gray-100 transition-colors duration-300 min-h-screen">
   <div id="root"></div>
 
   <script type="text/babel">
     function AboutPage() {
-      const [darkMode, setDarkMode] = React.useState(() => {
-        const savedTheme = localStorage.getItem("theme");
-        return savedTheme === "dark";
-      });
+      const [darkMode, setDarkMode] = React.useState(() => localStorage.getItem("theme") === "dark");
 
       React.useEffect(() => {
         document.documentElement.classList.toggle("dark", darkMode);
@@ -45,80 +69,100 @@
       }, [darkMode]);
 
       return (
-        <div className="container mx-auto px-4 py-8 max-w-3xl">
+        <div className="container mx-auto px-4 py-8 max-w-3xl fade-in">
+          <div className="flex justify-end mb-4">
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              className="p-2 rounded-full bg-white dark:bg-gray-800 text-gray-800 dark:text-white shadow-md hover:shadow-lg transition duration-300"
+              title="Toggle dark mode"
+            >
+              {darkMode ? "☀️" : "🌙"}
+            </button>
+          </div>
+
           <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-3xl overflow-hidden border border-gray-200 dark:border-gray-700 transition-all">
-            <div className="p-8">
-              <h1 className="text-4xl font-bold text-blue-700 dark:text-blue-400 mb-6 text-center">Why I'm Doing This</h1>
+            {/* Hero Header */}
+            <div className="relative bg-gradient-to-br from-accent-600 via-accent-700 to-primary-800 p-10 text-white text-center shadow-xl">
+              <div className="absolute inset-0 bg-white opacity-10 blur-sm rounded-br-3xl"></div>
+              <div className="relative z-10">
+                <h1 className="text-5xl font-display font-extrabold mb-2 tracking-tight">Why I'm Doing This</h1>
+                <p className="text-accent-100 font-medium tracking-wide">The story behind the streak</p>
+              </div>
+            </div>
 
-              <p className="text-lg text-gray-700 dark:text-gray-200 mb-4">
-                This running streak began as a personal challenge — something to keep me grounded, energized, and consistent.
-                But it quickly became more than that.
-              </p>
+            {/* Content Section */}
+            <div className="p-8 space-y-8 text-lg text-gray-700 dark:text-gray-200">
+              <section>
+                <p>
+                  This running streak began as a personal challenge — something to keep me grounded, energized, and consistent.
+                  But it quickly became more than that.
+                </p>
+                <p>
+                  I started running every day because I wanted to build something that required daily discipline.
+                  No shortcuts, no negotiations — just movement, effort, and showing up.
+                </p>
+              </section>
 
-              <p className="text-gray-700 dark:text-gray-200 mb-4">
-                I started running every day because I wanted to build something that required daily discipline.
-                No shortcuts, no negotiations — just movement, effort, and showing up. That kind of commitment leaks into everything else in life.
-              </p>
+              <section>
+                <h2 className="text-2xl font-semibold text-blue-600 dark:text-blue-300 mt-4">🌿 The Benefits I've Experienced</h2>
+                <ul className="list-disc list-inside pl-4 space-y-1">
+                  <li>Improved physical and mental resilience</li>
+                  <li>Greater emotional clarity and focus</li>
+                  <li>Better sleep and overall health</li>
+                  <li>Sense of purpose and momentum every day</li>
+                </ul>
+              </section>
 
-              <h2 className="text-2xl font-semibold text-blue-600 dark:text-blue-300 mb-2 mt-6">🌱 The Benefits I've Experienced</h2>
-              <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2">
-                <li>Improved physical and mental resilience</li>
-                <li>Greater emotional clarity and focus</li>
-                <li>Better sleep and overall health</li>
-                <li>Sense of purpose and momentum every day</li>
-              </ul>
+              <section>
+                <h2 className="text-2xl font-semibold text-blue-600 dark:text-blue-300 mt-4">📊 Why I'm Tracking It</h2>
+                <p>
+                  Tracking gives me a visual map of effort over time. It adds accountability and reminds me of how far I’ve come.
+                  Every day logged is a receipt of consistency — and seeing that makes it easier to keep going.
+                </p>
+                <p>
+                  I also love building things. This dashboard blends my love for data, storytelling, and growth.
+                </p>
+              </section>
 
-              <h2 className="text-2xl font-semibold text-blue-600 dark:text-blue-300 mb-2 mt-6">📈 Why I'm Tracking It</h2>
-              <p className="text-gray-700 dark:text-gray-200 mb-4">
-                Tracking gives me a visual map of effort over time. It adds accountability, but more importantly,
-                it reminds me of how far I’ve come. Every day logged is a receipt of consistency — and seeing progress 
-                makes it easier to keep going, especially on the tough days.
-              </p>
+              <section>
+                <h2 className="text-2xl font-semibold text-blue-600 dark:text-blue-300 mt-4">🎯 The Plan — 1 Year (and Beyond)</h2>
+                <p>
+                  The goal is one full year: 365 days of running, no breaks. I'm not here to run marathons every day,
+                  but I am here to honor the commitment, even on the smallest scale.
+                </p>
+                <p>
+                  I’ve set a personal daily minimum of <strong>2 miles (3.2 kilometers)</strong>. That’s my “no excuses” baseline —
+                  short enough to be doable, long enough to stay meaningful.
+                </p>
+                <p>
+                  I’m planning for sustainability, not burnout. That means recovery days, variation, and listening to my body.
+                </p>
+                <p>
+                  And if I hit 365? I’m not stopping there. By then, this will be a part of me.
+                </p>
+              </section>
 
-              <p className="text-gray-700 dark:text-gray-200 mb-4">
-                I also love building things, and this dashboard is a passion project that keeps me connected
-                to both the physical and digital sides of self-improvement. It blends data, storytelling, and momentum.
-              </p>
-
-              <h2 className="text-2xl font-semibold text-blue-600 dark:text-blue-300 mb-2 mt-6">🎯 The Plan — 1 Year (and Beyond)</h2>
-              <p className="text-gray-700 dark:text-gray-200 mb-4">
-                The goal is one full year: 365 days of running, no breaks. I'm not here to run marathons every day,
-                but I am here to honor the commitment, even on the smallest scale.
-              </p>
-
-              <p className="text-gray-700 dark:text-gray-200 mb-4">
-                I’ve set a personal daily minimum of <strong>2 miles (3.2 kilometers)</strong> per day.
-                That’s my line in the sand — no matter the weather, schedule, or energy level. It’s short enough to be doable,
-                but long enough to be meaningful. Even on recovery days, I stick to that baseline.
-              </p>
-
-              <p className="text-gray-700 dark:text-gray-200 mb-4">
-                I’m planning for sustainability, not burnout. That means listening to my body, mixing up terrain and distance,
-                and having slower days where I jog just to keep the streak alive. The real goal is consistency over intensity.
-              </p>
-
-              <p className="text-gray-700 dark:text-gray-200 mb-4">
-                And if I hit 365? Honestly, I don’t plan to stop. By then, it’ll be woven into my identity — and I want to see how far that can go.
-              </p>
-
-              <h2 className="text-2xl font-semibold text-blue-600 dark:text-blue-300 mb-2 mt-6">💡 What You Can Take From This</h2>
-              <p className="text-gray-700 dark:text-gray-200 mb-4">
-                You don’t need to run every day to improve your life. But a small, consistent habit—done with intention—can change everything.
-                Whether it’s walking, journaling, cold showers, or reading, daily rituals create structure and confidence in our lives.
-              </p>
+              <section>
+                <h2 className="text-2xl font-semibold text-blue-600 dark:text-blue-300 mt-4">💡 What You Can Take From This</h2>
+                <p>
+                  You don’t need to run every day to transform your life.
+                  A consistent daily habit — done intentionally — can unlock everything.
+                  Whether it’s walking, reading, or meditating, rituals build the structure for progress.
+                </p>
+              </section>
 
               <div className="text-center mt-10">
                 <a href="index.html">
-                  <button className="bg-blue-600 text-white px-6 py-2 rounded-full shadow hover:bg-blue-700 transition duration-300">
+                  <button className="bg-gradient-to-r from-blue-600 to-accent-600 text-white px-6 py-2 rounded-full shadow hover:brightness-110 transition duration-300 font-medium">
                     ⬅️ Back to Dashboard
                   </button>
                 </a>
               </div>
             </div>
 
-            <div className="bg-gray-100 dark:bg-gray-900 p-4 text-center text-sm text-gray-600 dark:text-gray-400 rounded-b-3xl">
-              🚀 Powered by Pulse Dynamics
-            </div>
+            <footer className="bg-gray-50 dark:bg-gray-900 p-4 text-center text-sm text-gray-600 dark:text-gray-400 rounded-b-3xl">
+              🚀 Powered by <strong>Pulse Dynamics</strong>
+            </footer>
           </div>
         </div>
       );
