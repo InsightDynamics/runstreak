@@ -38,6 +38,7 @@
         }
       }
     }
+    
   </script>
 
   <!-- Fonts -->
@@ -54,17 +55,9 @@
 
   <script type="text/babel">
     function RunningStreakDashboard() {
-      // -------------------------
-      // CONFIG SECTION — CHANGE THESE
-      // -------------------------
-      const streakDays = 194;
-      const totalKilometers = 1762.8;
-      const duration = {
-        days: 6,
-        hours: 13,
-        minutes: 36,
-        seconds: 47
-      };
+      const streakDays = 195;
+      const totalKilometers = 1774.9;
+      const duration = { days: 6, hours: 14, minutes: 34, seconds: 21 };
 
       // -------------------------
       // CALCULATED STATS
@@ -166,8 +159,8 @@
                 <div className="w-20 h-20 mx-auto bg-white rounded-full shadow-xl flex items-center justify-center mb-4">
                   <span className="text-3xl">🏃</span>
                 </div>
-                <h1 className="text-5xl font-display font-extrabold mb-1 tracking-tight">StrideStack</h1>
-                <p className="text-accent-100 font-medium tracking-wide">Noah Cornish's Running Journey</p>
+                <h1 className="text-5xl font-display font-extrabold mb-1 tracking-tight"></h1>
+                <p className="text-accent-100 font-medium tracking-wide">Noah Cornish's Running Streak</p>
                 <div className="flex items-center justify-center mt-2 text-sm">
                   <div className="px-3 py-1 bg-black bg-opacity-20 rounded-full">
                     Started: <strong>Sep 24, 2024</strong>
@@ -178,7 +171,7 @@
 
             {/* Main Streak Card */}
             <div className="pt-6 px-6">
-              <div className="bg-gradient-to-br from-primary-600 to-primary-800 rounded-2xl p-6 shadow-lg text-white relative overflow-hidden transform -translate-y-8">
+              <div className="bg-gradient-to-br from-primary-600 to-primary-800 rounded-2xl p-6 shadow-lg text-white relative overflow-hidden transform -translate-y-0">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-5 rounded-full -translate-x-8 -translate-y-8"></div>
                 <div className="text-center">
                   <p className="text-primary-100 uppercase tracking-wider text-sm font-semibold">Current Streak</p>
@@ -274,6 +267,25 @@
                   )}
                 </div>
               </div>
+              
+              <div className="bg-white rounded-2xl shadow-lg p-5 border border-gray-100">
+  <h2 className="font-display font-bold text-lg text-gray-900 mb-3">📍 Most Recent Strava Run</h2>
+  <div className="rounded-lg overflow-hidden border">
+    <iframe
+      title="Strava Activity"
+      height="1225"
+      width="100%"
+      frameBorder="0"
+      allowTransparency="true"
+      scrolling="no"
+      src="https://www.strava.com/activities/14098247389"
+    ></iframe>
+  </div>
+  <p className="text-xs text-center text-gray-500 mt-2">
+    Want to see more? <a href="https://www.strava.com/athletes/15357095" className="text-primary-600 font-medium underline">Visit my Strava</a>
+  </p>
+</div>
+
 
               <div className="bg-gray-50 dark:bg-gray-750 rounded-2xl p-4 text-center">
                 <p className="text-xs text-gray-600 dark:text-gray-400">
